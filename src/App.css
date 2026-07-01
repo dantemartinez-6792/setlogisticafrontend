@@ -1,0 +1,159 @@
+/* Header con logo y menú */
+.header {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.logo {
+  height: 75px;
+  margin-right: 30px;
+  cursor: pointer;
+}
+.menu {
+  display: flex;
+  gap: 20px;
+  flex-grow: 1;
+}
+/* Botones tipo tab */
+.tab-button {
+  background: none;
+  border: none;
+  padding: 10px 18px;
+  color: #0353A4; /* azul del logo */
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: border-color 0.3s, color 0.3s;
+  font-size: 16px;
+}
+.tab-button:hover {
+  color: #30BA7F; /* verde del logo */
+}
+.tab-button.active {
+  border-bottom-color: #30BA7F;
+  color: #30BA7F;
+}
+/* Contenedor principal */
+.app-container {
+  background-color: rgba(255,255,255,0.95);
+  min-height: 100vh;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #0353A4;
+}
+/* Opcional: estilo para main */
+main {
+  margin-top: 20px;
+}
+
+h2 {
+  color: #0353A4;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+.form-row {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+  flex: 1;
+  min-width: 180px;
+  border: 1px solid #0F8CCA;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 15px;
+  color: #0353A4;
+  outline: none;
+}
+
+textarea {
+  resize: none;
+  min-height: unset;
+}
+
+button {
+  background: linear-gradient(45deg, #30BA7F, #0F8CCA);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: linear-gradient(45deg, #0F8CCA, #30BA7F);
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  margin-top: 28px;
+}
+
+thead th {
+  background-color: #30BA7F;
+  color: white;
+  padding: 12px 15px;
+  border-radius: 6px;
+  text-align: left;
+}
+
+tbody tr {
+  background-color: #E6F0FA;
+  border-radius: 6px;
+}
+
+tbody td {
+  padding: 12px 15px;
+  vertical-align: middle;
+  color: #0353A4;
+}
+
+table button {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 5px;
+}
+
+td.acciones {
+  display: flex;
+  gap: 6px;
+}
+
+td.acciones button {
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  background-color: #0F8CCA;
+  color: white;
+  transition: opacity 0.2s;
+}
+
+td.acciones button.btn-delete {
+  background-color: #d9534f;
+}
+
+td.acciones button:hover {
+  opacity: 0.85;
+}
+
+
