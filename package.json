@@ -14,17 +14,14 @@
     "recharts": "^3.9.0",
     "serve": "^14.2.6",
     "web-vitals": "^2.1.4"
+  },  
+  "scripts": {
+    "start": "serve -s build",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
-"scripts": {
-  "start": "serve -s build",
-  "build": "react-scripts build",
-  "test": "react-scripts test",
-  "eject": "react-scripts eject"
-},
-<<<<<<< HEAD
-
-=======
->>>>>>> 4e32632 (Update package.json)
+  
   "eslintConfig": {
     "extends": [
       "react-app",
