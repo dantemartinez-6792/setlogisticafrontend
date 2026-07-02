@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './App.css'; // asumiendo aquí están los estilos
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 function Productos() {
   const [productos, setProductos] = useState([]);
   const [clientes, setClientes] = useState([]);
@@ -15,12 +17,12 @@ function Productos() {
   const [editandoId, setEditandoId] = useState(null);
 
   const cargarDatos = () => {
-    fetch('http://localhost:3000/productos')
+    fetch(`${backendUrl}/productos`)
       .then(res => res.json())
       .then(data => setProductos(Array.isArray(data) ? data : []))
       .catch(console.error);
 
-    fetch('http://localhost:3000/clientes')
+    fetch(`${backendUrl}/clientes`)
       .then(res => res.json())
       .then(data => setClientes(Array.isArray(data) ? data : []))
       .catch(console.error);
@@ -51,7 +53,7 @@ function Productos() {
       idCliente: Number(formData.idCliente)
     };
 
-    fetch('http://localhost:3000/productos', {
+    fetch(`${backendUrl}/productos`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data)
@@ -74,7 +76,7 @@ function Productos() {
       idCliente: Number(formData.idCliente)
     };
 
-    fetch(`http://localhost:3000/productos/${editandoId}`, {
+    fetch(`${backendUrl}/productos/${editandoId}`, {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data)
@@ -93,7 +95,7 @@ function Productos() {
 
   const handleEliminar = (id) => {
     if (window.confirm('¿Seguro quieres eliminar este producto?')) {
-      fetch(`http://localhost:3000/productos/${id}`, {method: 'DELETE'})
+      fetch(`${backendUrl}/productos/${id}`, {method: 'DELETE'})
       .then(res => {
         if (!res.ok) throw new Error('Error eliminando producto');
         return res.json();
@@ -182,4 +184,3 @@ function Productos() {
 }
 
 export default Productos;
-

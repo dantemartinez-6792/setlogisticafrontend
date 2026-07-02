@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 function Clientes() {
   const [clientes, setClientes] = useState([]);
   const [formData, setFormData] = useState({
@@ -12,7 +14,7 @@ function Clientes() {
   const [editandoId, setEditandoId] = useState(null);
 
   const cargarClientes = () => {
-    fetch('http://localhost:3000/clientes')
+    fetch(`${backendUrl}/clientes`)
       .then(res => res.json())
       .then(data => setClientes(Array.isArray(data) ? data : []))
       .catch(console.error);
@@ -23,7 +25,7 @@ function Clientes() {
   }, []);
 
   const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value});
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const prepararEditar = (cliente) => {
@@ -37,26 +39,26 @@ function Clientes() {
       return;
     }
 
-    fetch('http://localhost:3000/clientes', {
+    fetch(`${backendUrl}/clientes`, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
     })
-    .then(res => {
-      if (!res.ok) throw new Error('Error creando cliente');
-      return res.json();
-    })
-    .then(() => {
-      setFormData({idCliente: '', nombreCliente: '', direccion: '', telefono: '', email: ''});
-      cargarClientes();
-    })
-    .catch(err => alert(err.message));
+      .then(res => {
+        if (!res.ok) throw new Error('Error creando cliente');
+        return res.json();
+      })
+      .then(() => {
+        setFormData({ idCliente: '', nombreCliente: '', direccion: '', telefono: '', email: '' });
+        cargarClientes();
+      })
+      .catch(err => alert(err.message));
   };
 
   const handleEditar = () => {
-    fetch(`http://localhost:3000/clientes/${editandoId}`, {
+    fetch(`${backendUrl}/clientes/${editandoId}`, {
       method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         nombreCliente: formData.nombreCliente,
         direccion: formData.direccion,
@@ -64,27 +66,27 @@ function Clientes() {
         email: formData.email
       })
     })
-    .then(res => {
-      if (!res.ok) throw new Error('Error actualizando cliente');
-      return res.json();
-    })
-    .then(() => {
-      setEditandoId(null);
-      setFormData({idCliente: '', nombreCliente: '', direccion: '', telefono: '', email: ''});
-      cargarClientes();
-    })
-    .catch(err => alert(err.message));
+      .then(res => {
+        if (!res.ok) throw new Error('Error actualizando cliente');
+        return res.json();
+      })
+      .then(() => {
+        setEditandoId(null);
+        setFormData({ idCliente: '', nombreCliente: '', direccion: '', telefono: '', email: '' });
+        cargarClientes();
+      })
+      .catch(err => alert(err.message));
   };
 
   const handleEliminar = (id) => {
     if (window.confirm('¿Seguro quieres eliminar este cliente?')) {
-      fetch(`http://localhost:3000/clientes/${id}`, {method: 'DELETE'})
-      .then(res => {
-        if (!res.ok) throw new Error('Error eliminando cliente');
-        return res.json();
-      })
-      .then(() => cargarClientes())
-      .catch(err => alert(err.message));
+      fetch(`${backendUrl}/clientes/${id}`, { method: 'DELETE' })
+        .then(res => {
+          if (!res.ok) throw new Error('Error eliminando cliente');
+          return res.json();
+        })
+        .then(() => cargarClientes())
+        .catch(err => alert(err.message));
     }
   };
 
@@ -132,10 +134,14 @@ function Clientes() {
         ) : (
           <>
             <button onClick={handleEditar}>Guardar Cambios</button>
-            <button onClick={() => {
-              setEditandoId(null);
-              setFormData({idCliente: '', nombreCliente: '', direccion: '', telefono: '', email: ''});
-            }}>Cancelar</button>
+            <button
+              onClick={() => {
+                setEditandoId(null);
+                setFormData({ idCliente: '', nombreCliente: '', direccion: '', telefono: '', email: '' });
+              }}
+            >
+              Cancelar
+            </button>
           </>
         )}
       </div>
@@ -163,7 +169,6 @@ function Clientes() {
                 <button className="btn-action" onClick={() => prepararEditar(c)}>Editar</button>
                 <button className="btn-action btn-delete" onClick={() => handleEliminar(c.idCliente)}>Eliminar</button>
               </td>
-
             </tr>
           ))}
         </tbody>

@@ -21,7 +21,10 @@
   "test": "react-scripts test",
   "eject": "react-scripts eject"
 },
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4e326326fee5b6755bf2b37ba336c7c4faeee61b
   "eslintConfig": {
     "extends": [
       "react-app",
