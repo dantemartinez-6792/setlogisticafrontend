@@ -21,16 +21,12 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-<<<<<<< HEAD
-  
-=======
 "scripts": {
   "start": "serve -s build",
   "build": "react-scripts build",
   "test": "react-scripts test",
   "eject": "react-scripts eject"
 },
->>>>>>> 438ccd195c09bcbd968fd73e39e8b20d737982c3
   "eslintConfig": {
     "extends": [
       "react-app",
