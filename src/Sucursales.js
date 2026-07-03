@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 function Sucursales() {
   const [sucursales, setSucursales] = useState([]);
   const [formData, setFormData] = useState({
@@ -11,7 +13,7 @@ function Sucursales() {
   const [editandoId, setEditandoId] = useState(null);
 
   const cargarSucursales = () => {
-    fetch('http://localhost:3000/sucursales')
+    fetch(`${backendUrl}/sucursales`)
       .then(res => res.json())
       .then(data => setSucursales(Array.isArray(data) ? data : []))
       .catch(console.error);
@@ -42,7 +44,7 @@ function Sucursales() {
       telefono: formData.telefono || null
     };
 
-    fetch('http://localhost:3000/sucursales', {
+    fetch(`${backendUrl}/sucursales`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data)
@@ -65,7 +67,7 @@ function Sucursales() {
       telefono: formData.telefono || null
     };
 
-    fetch(`http://localhost:3000/sucursales/${editandoId}`, {
+    fetch(`${backendUrl}/sucursales/${editandoId}`, {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data)
@@ -84,7 +86,7 @@ function Sucursales() {
 
   const handleEliminar = (id) => {
     if (window.confirm('¿Seguro quieres eliminar esta sucursal?')) {
-      fetch(`http://localhost:3000/sucursales/${id}`, {method: 'DELETE'})
+      fetch(`${backendUrl}/sucursales/${id}`, {method: 'DELETE'})
       .then(res => {
         if (!res.ok) throw new Error('Error eliminando sucursal');
         return res.json();

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 function Movimientos() {
   const [movimientos, setMovimientos] = useState([]);
   const [clientes, setClientes] = useState([]);
@@ -20,22 +22,22 @@ function Movimientos() {
   const [editandoId, setEditandoId] = useState(null);
 
   const cargarDatos = () => {
-    fetch('http://localhost:3000/movimientos')
+    fetch(`${backendUrl}/movimientos`)
       .then(res => res.json())
       .then(data => setMovimientos(Array.isArray(data) ? data : []))
       .catch(console.error);
 
-    fetch('http://localhost:3000/clientes')
+    fetch(`${backendUrl}/clientes`)
       .then(res => res.json())
       .then(data => setClientes(Array.isArray(data) ? data : []))
       .catch(console.error);
 
-    fetch('http://localhost:3000/sucursales')
+    fetch(`${backendUrl}/sucursales`)
       .then(res => res.json())
       .then(data => setSucursales(Array.isArray(data) ? data : []))
       .catch(console.error);
 
-    fetch('http://localhost:3000/productos')
+    fetch(`${backendUrl}/productos`)
       .then(res => res.json())
       .then(data => {
         const productosArray = Array.isArray(data) ? data : [];
@@ -70,7 +72,7 @@ function Movimientos() {
       movimiento: formData.movimiento,
     };
 
-    fetch('http://localhost:3000/movimientos', {
+    fetch(`${backendUrl}/movimientos`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -120,7 +122,7 @@ function Movimientos() {
       movimiento: formData.movimiento
     };
 
-    fetch(`http://localhost:3000/movimientos/${editandoId}`, {
+    fetch(`${backendUrl}/movimientos/${editandoId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -148,7 +150,7 @@ function Movimientos() {
 
   const handleEliminar = id => {
     if (window.confirm('¿Seguro quieres eliminar este movimiento?')) {
-      fetch(`http://localhost:3000/movimientos/${id}`, { method: 'DELETE' })
+      fetch(`${backendUrl}/movimientos/${id}`, { method: 'DELETE' })
         .then(res => {
           if (!res.ok) throw new Error('Error eliminando movimiento');
           return res.json();
@@ -161,7 +163,6 @@ function Movimientos() {
   return (
     <div>
       <h2>Movimientos</h2>
-
       {/* Primera fila */}
       <div className="form-row">
         <input
@@ -327,7 +328,6 @@ function Movimientos() {
           ))}
         </tbody>
       </table>
-
     </div>
   );
 }

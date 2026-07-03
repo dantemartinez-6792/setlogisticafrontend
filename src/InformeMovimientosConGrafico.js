@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 function InformeMovimientosConGrafico() {
   const [movimientos, setMovimientos] = useState([]);
@@ -18,15 +20,15 @@ function InformeMovimientosConGrafico() {
 
   // Cargar combos de filtro
   useEffect(() => {
-    fetch('http://localhost:3000/clientes')
+    fetch(`${backendUrl}/clientes`)
       .then(res => res.json())
       .then(data => setClientes(Array.isArray(data) ? data : []))
       .catch(console.error);
-    fetch('http://localhost:3000/productos')
+    fetch(`${backendUrl}/productos`)
       .then(res => res.json())
       .then(data => setProductos(Array.isArray(data) ? data : []))
       .catch(console.error);
-    fetch('http://localhost:3000/sucursales')
+    fetch(`${backendUrl}/sucursales`)
       .then(res => res.json())
       .then(data => setSucursales(Array.isArray(data) ? data : []))
       .catch(console.error);
@@ -37,7 +39,7 @@ function InformeMovimientosConGrafico() {
     const query = new URLSearchParams();
     Object.entries(filtros).forEach(([k, v]) => { if (v) query.append(k, v); });
 
-    fetch(`http://localhost:3000/movimientos/filtrar?${query.toString()}`)
+    fetch(`${backendUrl}/movimientos/filtrar?${query.toString()}`)
       .then(res => res.json())
       .then(data => setMovimientos(Array.isArray(data) ? data : []))
       .catch(console.error);
