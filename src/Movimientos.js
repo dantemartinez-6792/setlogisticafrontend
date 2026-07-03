@@ -5,14 +5,13 @@ function Movimientos() {
   const [clientes, setClientes] = useState([]);
   const [sucursales, setSucursales] = useState([]);
   const [todosProductos, setTodosProductos] = useState([]);
-  const [productosFiltrados, setProductosFiltrados] = useState([]);
 
   const [formData, setFormData] = useState({
     idMovimiento: '',
     idSucursal: '',
     idCliente: '',
     idProducto: '',
-    pallets: '',
+    cantidad: '',
     bultos: '',
     observaciones: '',
     movimiento: 'ingreso',
@@ -41,31 +40,17 @@ function Movimientos() {
       .then(data => {
         const productosArray = Array.isArray(data) ? data : [];
         setTodosProductos(productosArray);
-        if (formData.idCliente) {
-          filtrarProductos(formData.idCliente, productosArray);
-        }
       })
       .catch(console.error);
   };
 
   useEffect(() => {
     cargarDatos();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const filtrarProductos = (clienteId, productos = todosProductos) => {
-    const filtrados = productos.filter(p => String(p.idCliente) === clienteId);
-    setProductosFiltrados(filtrados);
-  };
 
   const handleChange = e => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-
-    if (name === 'idCliente') {
-      filtrarProductos(value);
-      setFormData(prev => ({ ...prev, idProducto: '' }));
-    }
   };
 
   const handleCrear = () => {
@@ -79,8 +64,8 @@ function Movimientos() {
       idSucursal: Number(formData.idSucursal),
       idCliente: Number(formData.idCliente),
       idProducto: Number(formData.idProducto),
-      pallets: formData.pallets ? Number(formData.pallets) : null,
-      bultos: formData.bultos ? Number(formData.bultos) : null,
+      cantidad: formData.cantidad ? Number(formData.cantidad) : null,
+      bultos: formData.bultos || null,
       observaciones: formData.observaciones || null,
       movimiento: formData.movimiento,
     };
@@ -100,12 +85,11 @@ function Movimientos() {
           idSucursal: '',
           idCliente: '',
           idProducto: '',
-          pallets: '',
+          cantidad: '',
           bultos: '',
           observaciones: '',
           movimiento: 'ingreso'
         });
-        setProductosFiltrados([]);
         cargarDatos();
       })
       .catch(err => alert(err.message));
@@ -117,12 +101,11 @@ function Movimientos() {
       idSucursal: m.idSucursal.toString(),
       idCliente: m.idCliente.toString(),
       idProducto: m.idProducto.toString(),
-      pallets: m.pallets ? m.pallets.toString() : '',
-      bultos: m.bultos ? m.bultos.toString() : '',
+      cantidad: m.cantidad ? m.cantidad.toString() : '',
+      bultos: m.bultos || '',
       observaciones: m.observaciones || '',
       movimiento: m.movimiento || 'ingreso'
     });
-    filtrarProductos(m.idCliente.toString());
     setEditandoId(m.idMovimiento);
   };
 
@@ -131,8 +114,8 @@ function Movimientos() {
       idSucursal: Number(formData.idSucursal),
       idCliente: Number(formData.idCliente),
       idProducto: Number(formData.idProducto),
-      pallets: formData.pallets ? Number(formData.pallets) : null,
-      bultos: formData.bultos ? Number(formData.bultos) : null,
+      cantidad: formData.cantidad ? Number(formData.cantidad) : null,
+      bultos: formData.bultos || null,
       observaciones: formData.observaciones || null,
       movimiento: formData.movimiento
     };
@@ -153,12 +136,11 @@ function Movimientos() {
           idSucursal: '',
           idCliente: '',
           idProducto: '',
-          pallets: '',
+          cantidad: '',
           bultos: '',
           observaciones: '',
           movimiento: 'ingreso'
         });
-        setProductosFiltrados([]);
         cargarDatos();
       })
       .catch(err => alert(err.message));
@@ -225,34 +207,37 @@ function Movimientos() {
           name="idProducto"
           value={formData.idProducto}
           onChange={handleChange}
-          disabled={!formData.idCliente}
           className="form-control"
         >
           <option value="">Selecciona Producto</option>
-          {productosFiltrados.map(p => (
+          {todosProductos.map(p => (
             <option key={p.idProducto} value={p.idProducto}>
               {p.nombreProducto}
             </option>
           ))}
         </select>
         <input
-          name="pallets"
-          placeholder="Pallets"
+          name="cantidad"
+          placeholder="Cantidad"
           type="number"
-          value={formData.pallets}
+          value={formData.cantidad}
           onChange={handleChange}
           className="form-control"
           style={{ maxWidth: '100px' }}
         />
-        <input
+        <select
           name="bultos"
-          placeholder="Bultos"
-          type="number"
           value={formData.bultos}
           onChange={handleChange}
           className="form-control"
-          style={{ maxWidth: '100px' }}
-        />
+          style={{ maxWidth: '150px' }}
+        >
+          <option value="">Selecciona Bultos</option>
+          <option value="bultos grandes">Bultos Grandes</option>
+          <option value="bultos pequeños">Bultos Pequeños</option>
+          <option value="pallets">Pallets</option>
+          <option value="otros">Otros</option>
+        </select>
         <select
           name="movimiento"
           value={formData.movimiento}
@@ -293,12 +278,11 @@ function Movimientos() {
                   idSucursal: '',
                   idCliente: '',
                   idProducto: '',
-                  pallets: '',
+                  cantidad: '',
                   bultos: '',
                   observaciones: '',
                   movimiento: 'ingreso'
                 });
-                setProductosFiltrados([]);
               }}
             >
               Cancelar
@@ -315,7 +299,7 @@ function Movimientos() {
             <th>Sucursal</th>
             <th>Cliente</th>
             <th>Producto</th>
-            <th>Pallets</th>
+            <th>Cantidad</th>
             <th>Bultos</th>
             <th>Fecha</th>
             <th>Movimiento</th>
@@ -330,9 +314,9 @@ function Movimientos() {
               <td>{sucursales.find(s => s.idSucursal === m.idSucursal)?.nombreSucursal || m.idSucursal}</td>
               <td>{clientes.find(c => c.idCliente === m.idCliente)?.nombreCliente || m.idCliente}</td>
               <td>{todosProductos.find(p => p.idProducto === m.idProducto)?.nombreProducto || m.idProducto}</td>
-              <td>{m.pallets || '-'}</td>
+              <td>{m.cantidad || '-'}</td>
               <td>{m.bultos || '-'}</td>
-              <td>{m.fechaMovimiento ? new Date(m.fechaMovimiento).toLocaleDateString() : '-'}</td> {/* Aquí */}
+              <td>{m.fechaMovimiento ? new Date(m.fechaMovimiento).toLocaleDateString() : '-'}</td>
               <td>{m.movimiento}</td>
               <td>{m.observaciones || '-'}</td>
               <td className="acciones">
