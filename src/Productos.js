@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import './App.css'; // asumiendo aquí están los estilos
+import './App.css';
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 function Productos() {
   const [productos, setProductos] = useState([]);
-  const [clientes, setClientes] = useState([]);
 
   const [formData, setFormData] = useState({
     idProducto: '',
     nombreProducto: '',
     descripcion: '',
-    idCliente: ''
   });
 
   const [editandoId, setEditandoId] = useState(null);
@@ -20,11 +18,6 @@ function Productos() {
     fetch(`${backendUrl}/productos`)
       .then(res => res.json())
       .then(data => setProductos(Array.isArray(data) ? data : []))
-      .catch(console.error);
-
-    fetch(`${backendUrl}/clientes`)
-      .then(res => res.json())
-      .then(data => setClientes(Array.isArray(data) ? data : []))
       .catch(console.error);
   };
 
@@ -42,15 +35,14 @@ function Productos() {
   };
 
   const handleCrear = () => {
-    if (!formData.nombreProducto || !formData.idCliente) {
-      alert('Completa nombre y selecciona cliente');
+    if (!formData.nombreProducto) {
+      alert('Completa el nombre del producto');
       return;
     }
 
     const data = {
       nombreProducto: formData.nombreProducto,
       descripcion: formData.descripcion || null,
-      idCliente: Number(formData.idCliente)
     };
 
     fetch(`${backendUrl}/productos`, {
@@ -63,7 +55,7 @@ function Productos() {
       return res.json();
     })
     .then(() => {
-      setFormData({idProducto: '', nombreProducto: '', descripcion: '', idCliente: ''});
+      setFormData({idProducto: '', nombreProducto: '', descripcion: ''});
       cargarDatos();
     })
     .catch(err => alert(err.message));
@@ -73,7 +65,6 @@ function Productos() {
     const data = {
       nombreProducto: formData.nombreProducto,
       descripcion: formData.descripcion || null,
-      idCliente: Number(formData.idCliente)
     };
 
     fetch(`${backendUrl}/productos/${editandoId}`, {
@@ -87,7 +78,7 @@ function Productos() {
     })
     .then(() => {
       setEditandoId(null);
-      setFormData({idProducto: '', nombreProducto: '', descripcion: '', idCliente: ''});
+      setFormData({idProducto: '', nombreProducto: '', descripcion: ''});
       cargarDatos();
     })
     .catch(err => alert(err.message));
@@ -124,19 +115,6 @@ function Productos() {
           value={formData.descripcion}
           onChange={handleChange}
         />
-        <select
-          className="form-control"
-          name="idCliente"
-          value={formData.idCliente}
-          onChange={handleChange}
-        >
-          <option value="">Selecciona Cliente</option>
-          {clientes.map(c => (
-            <option key={c.idCliente} value={c.idCliente}>
-              {c.nombreCliente}
-            </option>
-          ))}
-        </select>
       </div>
 
       <div>
@@ -147,7 +125,7 @@ function Productos() {
             <button className="btn-primary" onClick={handleEditar}>Guardar Cambios</button>
             <button className="btn-secondary" onClick={() => {
               setEditandoId(null);
-              setFormData({idProducto: '', nombreProducto: '', descripcion: '', idCliente: ''});
+              setFormData({idProducto: '', nombreProducto: '', descripcion: ''});
             }}>Cancelar</button>
           </>
         )}
@@ -159,7 +137,6 @@ function Productos() {
             <th>ID Producto</th>
             <th>Nombre</th>
             <th>Descripción</th>
-            <th>Cliente</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -169,12 +146,10 @@ function Productos() {
               <td>{p.idProducto}</td>
               <td>{p.nombreProducto}</td>
               <td>{p.descripcion || '-'}</td>
-              <td>{clientes.find(c => c.idCliente === p.idCliente)?.nombreCliente || p.idCliente}</td>
               <td className="acciones">
                 <button className="btn-action" onClick={() => prepararEditar(p)}>Editar</button>
                 <button className="btn-action btn-delete" onClick={() => handleEliminar(p.idProducto)}>Eliminar</button>
               </td>
-
             </tr>
           ))}
         </tbody>
