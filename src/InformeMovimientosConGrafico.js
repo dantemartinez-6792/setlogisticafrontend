@@ -49,21 +49,22 @@ function InformeMovimientosConGrafico() {
     setFiltros({ ...filtros, [e.target.name]: e.target.value });
   };
 
-  // Preparar datos para gráfico y cálculos
-  const datosGrafico = movimientos.reduce((acc, m) => {
-    let item = acc.find(x => x.movimiento === m.movimiento);
-    if (!item) {
-      item = { movimiento: m.movimiento, totalPallets: 0, totalBultos: 0 };
-      acc.push(item);
-    }
-    item.totalPallets += Number(m.pallets) || 0;
-    item.totalBultos += Number(m.bultos) || 0;
+  // Agrupar movimientos por tipo de bultos, sumando la cantidad según el tipo
+  const datosPorTipoBulto = movimientos.reduce((acc, m) => {
+    const tipo = m.bultos || 'Sin Tipo';
+    if (!acc[tipo]) acc[tipo] = 0;
+    acc[tipo] += Number(m.cantidad) || 0;
     return acc;
-  }, []);
+  }, {});
 
-  // Calcular totales generales
-  const totalPallets = movimientos.reduce((sum, m) => sum + (Number(m.pallets) || 0), 0);
-  const totalBultos = movimientos.reduce((sum, m) => sum + (Number(m.bultos) || 0), 0);
+  // Convertir a array para gráfico
+  const datosGrafico = Object.entries(datosPorTipoBulto).map(([tipo, totalCantidad]) => ({
+    tipo,
+    totalCantidad
+  }));
+
+  // Calcular total general
+  const totalCantidad = movimientos.reduce((sum, m) => sum + (Number(m.cantidad) || 0), 0);
 
   return (
     <div>
@@ -96,19 +97,17 @@ function InformeMovimientosConGrafico() {
       <div style={{ marginTop: 40, height: 300 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={datosGrafico} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-            <XAxis dataKey="movimiento" />
+            <XAxis dataKey="tipo" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="totalPallets" fill="#30BA7F" name="Total Pallets" />
-            <Bar dataKey="totalBultos" fill="#0F8CCA" name="Total Bultos" />
+            <Bar dataKey="totalCantidad" fill="#30BA7F" name="Total Cantidad" />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
       <div style={{ marginTop: 20 }}>
-        <strong>Total Pallets:</strong> {totalPallets} &nbsp; | &nbsp;
-        <strong>Total Bultos:</strong> {totalBultos}
+        <strong>Total Cantidad:</strong> {totalCantidad}
       </div>
     </div>
   );
